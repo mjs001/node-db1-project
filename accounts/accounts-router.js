@@ -40,7 +40,7 @@ router.post("/", (req, res) => {
     db("accounts")
       .insert(account, "id")
       .then((ids) => {
-        res.status(201).json({ data: ids });
+        res.status(201).json({ data: ids, account });
       })
       .catch((error) => {
         console.log(error);
@@ -56,7 +56,7 @@ router.put("/:id", (req, res) => {
     .update(changes)
     .then((countOfRecords) => {
       if (countOfRecords > 0) {
-        res.status(200).json({ data: count });
+        res.status(200).json({ data: countOfRecords });
       } else {
         res.status(404).json({ message: "record not found by that id" });
       }
@@ -68,12 +68,16 @@ router.put("/:id", (req, res) => {
 });
 
 router.delete("/:id", (req, res) => {
-  db("post")
+  db("accounts")
     .where({ id: req.params.id })
     .del()
     .then((count) => {
       if (count > 0) {
-        res.status(200).json({ data: count });
+        res
+          .status(200)
+          .json({
+            message: `the post with the id of ${count} has successfully been deleted`,
+          });
       } else {
         res.status(404).json({ message: "record not found by that id" });
       }
